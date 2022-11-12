@@ -28,9 +28,7 @@ module.exports = {
   },
   theme: {
     extend: {
-      backgroundImage : {
-        "hero-bg" : "./src/assets/images/bg.png"
-      }
+      
     },
   },
   plugins: [require("daisyui")],
