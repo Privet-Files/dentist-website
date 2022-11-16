@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthProvider/Authprovider";
 
 const Navbar = () => {
+const {user,logout} = useContext(AuthContext)
+
+const handleLogout = () =>{
+  logout()
+  .then(result => {
+    const user = result.user
+    console.log(user)
+  })
+  .catch(err => console.log(err))
+}
 
     const menulist = <>
         <li><Link to = '/'>Home</Link></li>
         <li><Link to = '/about'>About</Link></li>
         <li><Link to = '/appoinment'>Appoinment</Link></li>
-        <li><Link to = '/review'>Review</Link></li>
+        
         <li><Link to = '/contact'>Contact </Link></li>
-        <li><Link to = '/login'>Login</Link></li>
+       { user?.uid ? 
+       <>
+       <li><Link to = '/dashboard'>DashBoard</Link></li>
+       <li><button onClick={handleLogout}>Sign Out</button></li>
+       </>
+       :
+       <li><Link to = '/login'>Login</Link></li>
+      }
     </>
 
   return (
