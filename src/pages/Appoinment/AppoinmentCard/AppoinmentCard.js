@@ -24,7 +24,7 @@ const AppoinmentCards = ({selectDate,setgetoption}) => {
         </div>
         {
           treatment && 
-          <ModalPage selectDate = {selectDate} treatment = {treatment}></ModalPage>
+          <ModalPage selectDate = {selectDate} settreatment = {settreatment} treatment = {treatment}></ModalPage>
         }
     </section>
   );
