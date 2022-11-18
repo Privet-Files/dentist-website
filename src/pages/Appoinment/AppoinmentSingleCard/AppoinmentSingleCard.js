@@ -10,7 +10,7 @@ const AppoinmentSingleCard = ({ appoinment,settreatment }) => {
           <p> {slots[0] ? slots[0] : "No Schdule Found"} </p>
           <p>
             {" "}
-            {slots?.length > 0 ? `${slots.length}` : "0"}{" "}
+            {slots?.length > 0 ? `${slots?.length}` : "0"}{" "}
             {slots.length <= 1 ? "SPACE" : "SPACES"} AVAILABLE
           </p>
         </div>

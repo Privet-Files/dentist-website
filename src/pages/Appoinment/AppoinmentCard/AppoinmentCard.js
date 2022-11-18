@@ -1,18 +1,26 @@
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import React,{useState,useEffect} from "react";
+import React,{useState} from "react";
 import ModalPage from "../../../Sortcomponent/ModalPage";
 import AppoinmentSingleCard from "../AppoinmentSingleCard/AppoinmentSingleCard";
 
 
 const AppoinmentCards = ({selectDate,setgetoption}) => {
-    const [appoinments, setappoinments] = useState([])
+    // const [appoinments, setappoinments] = useState([])
     const [treatment, settreatment] = useState(null)
+    const date = format(selectDate, 'PP')
+    const {data:appoinments= [], refetch,isLoading} =  useQuery({
+      queryKey : ['appoinmentOpiton',date],
+      queryFn : async ()=>{
+        const res = await  fetch(`http://localhost:5000/appoinmentOpiton?date=${date}`)
+        const data = await res.json()
+        return data
+      }
+    })
      
-    useEffect(() => {
-      fetch('appoinmentOption.json')
-      .then(res => res.json())
-      .then(data => setappoinments(data))
-    }, [])
+    if(isLoading){
+      return <p>Loadding...</p>
+    }
 
   return (
     <section className="w-9/12 mx-auto my-10">
@@ -24,7 +32,7 @@ const AppoinmentCards = ({selectDate,setgetoption}) => {
         </div>
         {
           treatment && 
-          <ModalPage selectDate = {selectDate} settreatment = {settreatment} treatment = {treatment}></ModalPage>
+          <ModalPage refetch = {refetch} selectDate = {selectDate} settreatment = {settreatment} treatment = {treatment}></ModalPage>
         }
     </section>
   );

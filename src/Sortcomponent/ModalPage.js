@@ -1,7 +1,10 @@
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
+import { AuthContext } from '../Context/AuthProvider/Authprovider';
 
-const ModalPage = ({treatment,selectDate,settreatment}) => {
+const ModalPage = ({treatment,selectDate,settreatment,refetch}) => {
+  const {user} = useContext(AuthContext)
     const {name,slots} = treatment
     const date = format(selectDate,'PP')
     const handlegetdata = (event) =>{
@@ -14,7 +17,7 @@ const ModalPage = ({treatment,selectDate,settreatment}) => {
         const slote = form.slote.value;
         
 
-        const data = {
+        const booking = {
            selectedData : time,
            treatmentName:name,
            pataint : patentName,
@@ -22,9 +25,26 @@ const ModalPage = ({treatment,selectDate,settreatment}) => {
            phone,
            email,  
         }
-        form.reset()
-        console.log(data)
-        settreatment(null)
+
+        fetch('http://localhost:5000/bookings',{
+          method : 'POST',
+          headers : {
+            'content-type' : 'application/json'
+          },
+          body : JSON.stringify(booking)
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          if(data.acknowledged){
+            settreatment(null)
+            refetch()
+            toast.success('booking Confirm')
+          }else{
+            toast.error(data.message)
+          }
+         
+        })
 
         
     }
@@ -50,9 +70,9 @@ const ModalPage = ({treatment,selectDate,settreatment}) => {
                     slots.map((optn,index) => <option value = {optn} key = {index}> {optn} </option>)
                 }
             </select>
-            <input type="text" placeholder='your name' name = 'name' className="input input-bordered w-full my-5" required />
+            <input type="text" placeholder='your name' name = 'name' className="input input-bordered w-full my-5" required/>
             <input type="text" placeholder='your number' name = 'number' className="input input-bordered w-full my-5"  required/>
-            <input type="email" placeholder='your email' name = 'email' className="input input-bordered w-full my-5" required />
+            <input type="email" placeholder='your email' disabled defaultValue={user?.email} name = 'email' className="input input-bordered w-full my-5" />
             <button className='btn '>Sumbit</button>
           </h3>
             </form>
